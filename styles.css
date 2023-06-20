@@ -1,0 +1,31 @@
+body{
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: palevioletred;
+}
+
+
+.paper{
+  width: 250px;
+  height: 250px;
+  border: 5px solid rgb(0, 0, 0);
+  position: absolute;
+  border-radius: 20px;
+}
+
+.name{
+  width: 230px;
+  height: 100px;
+  /* background-color: aqua; */
+}
+
+/* .name h1{
+  margin-left: 20px;
+} */
+
+h1{
+  margin-left: 65px;
+  font-family: cursive;
+}
