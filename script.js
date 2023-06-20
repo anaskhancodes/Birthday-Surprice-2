@@ -1,4 +1,6 @@
 class Papers {
+
+
   holdingPaper = false;
   prevMouseX = 0;
   prevMouseY = 0;
@@ -10,84 +12,61 @@ class Papers {
   currentPaperY = 0;
 
   init(paper) {
-    paper.addEventListener("mousedown", this.handleMouseDown);
-    paper.addEventListener("touchstart", this.handleTouchStart, { passive: false });
-    document.addEventListener("mousemove", this.handleMouseMove);
-    document.addEventListener("touchmove", this.handleTouchMove, { passive: false });
-    window.addEventListener("mouseup", this.handleMouseUp);
-    window.addEventListener("touchend", this.handleTouchEnd);
-  }
+    paper.addEventListener("mousedown", (e) => {
+      console.log("Mousedown");
 
-  handleMouseDown = (e) => {
-    this.handlePointerDown(e.clientX, e.clientY);
-  };
+      this.holdingPaper = true;
+      paper.style.zIndex = highestZ;
+      highestZ += 1;
 
-  handleTouchStart = (e) => {
-    const touch = e.touches[0];
-    this.handlePointerDown(touch.clientX, touch.clientY);
-  };
+      if (e.button === 0) {
+        this.prevMouseX = this.mouseX;
+        this.prevMouseY = this.mouseY;
+      }
 
-  handlePointerDown(clientX, clientY) {
-    console.log("Pointer down");
 
-    this.holdingPaper = true;
+      console.log(this.prevMouseX);
+      console.log(this.prevMouseY);
+    });
 
-    if (this.holdingPaper) {
-      this.prevMouseX = clientX;
-      this.prevMouseY = clientY;
-    }
-  }
+    document.addEventListener("mousemove", (e) => {
+      console.log("MouseMove");
 
-  handleMouseMove = (e) => {
-    this.handlePointerMove(e.clientX, e.clientY);
-  };
+      this.mouseX = e.clientX;
+      this.mouseY = e.clientY;
 
-  handleTouchMove = (e) => {
-    const touch = e.touches[0];
-    this.handlePointerMove(touch.clientX, touch.clientY);
-  };
+      this.velocityX = this.mouseX - this.prevMouseX;
+      this.velocityY = this.mouseY - this.prevMouseY;
 
-  handlePointerMove(clientX, clientY) {
-    console.log("Pointer move");
+      if (this.holdingPaper) {
+        this.currentPaperX += this.velocityX;
+        this.currentPaperY += this.velocityY;
 
-    this.mouseX = clientX;
-    this.mouseY = clientY;
+        this.prevMouseX = this.mouseX;
+        this.prevMouseY = this.mouseY;
 
-    this.velocityX = this.mouseX - this.prevMouseX;
-    this.velocityY = this.mouseY - this.prevMouseY;
-
-    if (this.holdingPaper) {
-      this.currentPaperX += this.velocityX;
-      this.currentPaperY += this.velocityY;
-
-      this.prevMouseX = this.mouseX;
-      this.prevMouseY = this.mouseY;
-
-      const papers = Array.from(document.querySelectorAll('.paper'));
-      papers.forEach((paper) => {
         paper.style.transform = `translateX(${this.currentPaperX}px) translateY(${this.currentPaperY}px)`;
-      });
-    }
+      }
+    });
+
+    window.addEventListener("mouseup", (e) => {
+      console.log("MouseUp");
+      this.holdingPaper = false;
+    });
   }
-
-  handleMouseUp = () => {
-    this.holdingPaper = false;
-    console.log("Mouse up");
-  };
-
-  handleTouchEnd = () => {
-    this.holdingPaper = false;
-    console.log("Touch end");
-  };
 }
 
 let highestZ = 1;
 const papers = Array.from(document.querySelectorAll('.paper'));
 
-papers.forEach((paper) => {
+papers.forEach(paper => {
   const p = new Papers();
   p.init(paper);
 });
+
+
+
+
 
 const nameDiv = document.querySelector('.name');
 const name = prompt("Please enter your name:");
@@ -100,3 +79,7 @@ if (name) {
 } else {
   alert("Name is required!");
 }
+
+
+
+
